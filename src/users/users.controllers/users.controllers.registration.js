@@ -1,15 +1,14 @@
-const Joi = require("joi");
-const usersModel = require("./users.model");
+const usersModel = require("../users.model");
 const bcryptjs = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-// const gravatar = require("gravatar");
-const { UnauthorizedError, NotFound } = require("../errorHandler/errorHandler");
+const { NotFound } = require("../../errorHandler/errorHandler");
 const { v4 } = require("uuid");
 const sgMail = require("@sendgrid/mail");
+const path = require("path");
 
-const sendVerificationMail = require("../helpers/sendGrid");
+const { prepareReturnUserData } = require("./users.controllers.common");
+const sendVerificationMail = require("../../helpers/sendGrid");
 
-class UserController {
+class UserControllerRegistration {
   constructor() {
     this._costFactor = 4;
     this._sgMail = sgMail;
@@ -62,7 +61,7 @@ class UserController {
         return res.status(500).json(response.message);
       }
 
-      const [preparedUserData] = this.prepareReturnUserData([newUser]);
+      const [preparedUserData] = prepareReturnUserData([newUser]);
 
       return res.status(201).json({
         user: {
@@ -74,24 +73,6 @@ class UserController {
     } catch (error) {
       next(error);
     }
-  }
-
-  userDataValidation(req, res, next) {
-    const validationSchema = Joi.object({
-      username: Joi.string().required(),
-      email: Joi.string().email().required(),
-      password: Joi.string().required(),
-    });
-
-    const userData = req.body;
-
-    const validationResult = validationSchema.validate(userData);
-
-    if (validationResult.error) {
-      return res.status(400).send({ message: validationResult.error });
-    }
-
-    next();
   }
 
   async verifyEmail(req, res, next) {
@@ -108,23 +89,15 @@ class UserController {
 
       await usersModel.verifyUser(userToVerify._id);
 
-      return res.status(200).json({
-        message: "Verification successful",
-      });
+      const filePath =
+        path.join(__dirname).slice(0, path.join(__dirname).length - 28) +
+        "/file.collector/index.html";
+
+      return res.status(200).sendFile(filePath);
     } catch (error) {
       next(error);
     }
   }
-
-  prepareReturnUserData(users = []) {
-    const newUserListData = users.map((user) => {
-      return {
-        email: user.email,
-        username: user.username,
-      };
-    });
-    return newUserListData;
-  }
 }
 
-module.exports = new UserController();
+module.exports = new UserControllerRegistration();

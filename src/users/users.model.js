@@ -1,22 +1,8 @@
 const mongoose = require("mongoose");
-const { Schema } = mongoose;
-
-// const TodoSchema = new Schema({
-//   title: String,
-//   difficulty: {
-//     type: String,
-//     enum: ["easy", "normal", "hard"],
-//     default: "easy",
-//   },
-//   date: String,
-//   time: String,
-//   status: String,
-//   category: String,
-// });
-
-const TodoSchema = new Schema({
-  id: String,
-});
+const {
+  Schema,
+  Types: { ObjectId },
+} = mongoose;
 
 const userSchema = new Schema({
   username: {
@@ -43,15 +29,12 @@ const userSchema = new Schema({
     type: String,
     required: [true, "Verify token is required"],
   },
-  todoListIds: {
-    type: [TodoSchema],
-    default: [],
-  },
+  todoListIds: [{ type: ObjectId, ref: "todo" }],
 });
 
 userSchema.statics.findByEmail = findByEmail;
 userSchema.statics.findByUserName = findByUserName;
-// userSchema.statics.updateToken = updateToken;
+userSchema.statics.updateToken = updateToken;
 userSchema.statics.findVerificationToken = findVerificationToken;
 userSchema.statics.verifyUser = verifyUser;
 
@@ -63,13 +46,13 @@ async function findByUserName(username) {
   return await this.find({ username: username });
 }
 
-// async function updateToken(id, newToken) {
-//   return this.findByIdAndUpdate(
-//     id,
-//     { $set: { token: newToken } },
-//     { new: true }
-//   );
-// }
+async function updateToken(id, newToken) {
+  return this.findByIdAndUpdate(
+    id,
+    { $set: { token: newToken } },
+    { new: true }
+  );
+}
 
 async function verifyUser(userId) {
   return this.findByIdAndUpdate(
@@ -85,17 +68,6 @@ async function verifyUser(userId) {
 async function findVerificationToken(verificationToken) {
   return this.findOne({ verificationToken });
 }
-
-async function main() {
-  try {
-    await mongoose.connect(process.env.MONGOOSE_DB_URL);
-  } catch (error) {
-    console.log(error);
-    process.exit(1);
-  }
-}
-
-main();
 
 const usersModel = mongoose.model("User", userSchema);
 
