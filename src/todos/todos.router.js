@@ -16,4 +16,19 @@ router.post(
 
 router.get("/", userAuthorization, todoController.getAllUserTodos);
 
+router.delete("/:todoId", userAuthorization, todoController.removeTodoById);
+
+// router.put(
+//   "/:todoId/finished",
+//   userAuthorization,
+//   todoController.updateTodoDone
+// );
+
+router.put(
+  "/:todoId",
+  userAuthorization,
+  todoController.validateUpdateTodo,
+  todoController.updateTodo
+);
+
 module.exports = router;

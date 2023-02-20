@@ -9,7 +9,7 @@ const TodoSchema = new Schema({
   difficulty: {
     type: String,
     enum: ["easy", "normal", "hard"],
-    default: "easy",
+    default: "normal",
     required: true,
   },
   date: {
@@ -21,8 +21,10 @@ const TodoSchema = new Schema({
     type: String,
   },
   status: {
-    required: true,
     type: String,
+    enum: ["undone", "done"],
+    default: "undone",
+    required: true,
   },
   category: {
     required: true,
