@@ -20,6 +20,12 @@ const TodoSchema = new Schema({
     required: true,
     type: String,
   },
+  type: {
+    type: String,
+    enum: ["quest", "challenge"],
+    default: "quest",
+    required: true,
+  },
   status: {
     type: String,
     enum: ["undone", "done"],

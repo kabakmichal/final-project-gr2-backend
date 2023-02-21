@@ -21,17 +21,21 @@ class usersControllerAuthentication {
       }
 
       if (!user) {
-        return res.status(401).json({ message: "Email or password is wrong" });
+        return res
+          .status(401)
+          .json({ message: "Email/username or password is wrong" });
       }
 
       const isPasswordsValid = await bcryptjs.compare(password, user.password);
 
       if (!isPasswordsValid) {
-        return res.status(401).json({ message: "Email or password is wrong" });
+        return res
+          .status(401)
+          .json({ message: "Email/username or password is wrong" });
       }
 
       if (!user.verify) {
-        return res.status(400).json({ message: "Email is not verified" });
+        return res.status(400).json({ message: "User is not verified" });
       }
       const token = await jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
         expiresIn: 60 * 60 * 24 * 2,
@@ -56,7 +60,7 @@ class usersControllerAuthentication {
     try {
       const user = req.user;
       await usersModel.updateToken(user._id, null);
-      return res.status(204).send();
+      return res.status(204).json({ message: "User logged out" });
     } catch (error) {
       next(error);
     }

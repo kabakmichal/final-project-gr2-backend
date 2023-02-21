@@ -4,13 +4,14 @@ const usersControllerAuthentication = require("./users.controllers/users.control
 const router = express.Router();
 
 const {
-  userDataValidation,
+  userDataRegistrationValidation,
   userAuthorization,
+  userDataAuthorizationValidation,
 } = require("./users.controllers/users.controllers.common.js");
 
 router.post(
   "/register",
-  userDataValidation,
+  userDataRegistrationValidation,
   usersControllerRegistration.userRegistration
 );
 
@@ -21,7 +22,7 @@ router.get(
 
 router.put(
   "/login",
-  userDataValidation,
+  userDataAuthorizationValidation,
   usersControllerAuthentication.userLogIn
 );
 

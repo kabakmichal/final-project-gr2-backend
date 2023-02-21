@@ -5,23 +5,40 @@ const jwt = require("jsonwebtoken");
 
 function prepareReturnUserData(users = []) {
   const newUserListData = users.map((user) => {
-    const { email, username, verify, todoListIds, token } = user;
-    console.log(user);
+    const { email, username, verify } = user;
 
     return {
       email,
       username,
       verify,
-      todoListIds,
+      todoListIds: user.todoListIds,
     };
   });
   return newUserListData;
 }
 
-function userDataValidation(req, res, next) {
+function userDataRegistrationValidation(req, res, next) {
   const validationSchema = Joi.object({
     username: Joi.string().required(),
     email: Joi.string().email().required(),
+    password: Joi.string().required(),
+  });
+
+  const userData = req.body;
+
+  const validationResult = validationSchema.validate(userData);
+
+  if (validationResult.error) {
+    return res.status(400).json({ message: validationResult.error });
+  }
+
+  next();
+}
+
+function userDataAuthorizationValidation(req, res, next) {
+  const validationSchema = Joi.object({
+    username: Joi.string(),
+    email: Joi.string().email(),
     password: Joi.string().required(),
   });
 
@@ -68,6 +85,7 @@ async function userAuthorization(req, res, next) {
 
 module.exports = {
   prepareReturnUserData,
-  userDataValidation,
+  userDataRegistrationValidation,
+  userDataAuthorizationValidation,
   userAuthorization,
 };
