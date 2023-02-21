@@ -58,7 +58,10 @@ class UserControllerRegistration {
       );
 
       if (response) {
-        return res.status(500).json(response.message);
+        return res.status(500).json({
+          responseMsg: response.message,
+          serverMessage: "validation message failed",
+        });
       }
 
       const [preparedUserData] = prepareReturnUserData([newUser]);

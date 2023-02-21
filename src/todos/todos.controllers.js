@@ -1,6 +1,7 @@
 const todosModel = require("./todos.model");
 const usersModel = require("../users/users.model");
 const Joi = require("joi");
+
 const {
   prepareReturnUserData,
 } = require("../users/users.controllers/users.controllers.common");
@@ -17,7 +18,8 @@ class TodosController {
       date: Joi.string().required(),
       time: Joi.string().required(),
       status: Joi.string().required(),
-      category: Joi.string().required(),
+      category: Joi.string().required().valid("undone", "done"),
+      type: Joi.string().required().valid("quest", "challenge"),
     });
 
     const todoData = req.body;
@@ -116,6 +118,7 @@ class TodosController {
       time: Joi.string(),
       status: Joi.string(),
       category: Joi.string(),
+      type: Joi.string().valid("quest", "challenge"),
     });
 
     const todoData = req.body;
@@ -157,34 +160,34 @@ class TodosController {
     }
   }
 
-  // async updateTodoDone(req, res, next) {
-  //   try {
-  //     const todoId = req.params.todoId;
-  //     const requestBody = {
-  //       status: "done",
-  //     };
+  async updateTodoDone(req, res, next) {
+    try {
+      const todoId = req.params.todoId;
+      const requestBody = {
+        status: "done",
+      };
 
-  //     const updateResults = await todosModel.findByIdAndUpdate(
-  //       todoId,
-  //       requestBody
-  //     );
+      const updateResults = await todosModel.findByIdAndUpdate(
+        todoId,
+        requestBody
+      );
 
-  //     if (!updateResults) {
-  //       return res.status(404).json({
-  //         error: "Todo is not found",
-  //       });
-  //     }
+      if (!updateResults) {
+        return res.status(404).json({
+          error: "Todo is not found",
+        });
+      }
 
-  //     return res
-  //       .status(200)
-  //       .json({ message: "Todo status updated to 'done' " });
-  //   } catch (error) {
-  //     next({
-  //       error: error,
-  //       message: "Todo is not found",
-  //     });
-  //   }
-  // }
+      return res
+        .status(200)
+        .json({ message: "Todo status updated to 'done' " });
+    } catch (error) {
+      next({
+        error: error,
+        message: "Todo is not found",
+      });
+    }
+  }
 }
 
 module.exports = new TodosController();
