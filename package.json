@@ -1,7 +1,42 @@
 {
+  "name": "final-project-gr2-backend",
+  "description": "Final Project of Group 2 - Backend",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "start:dev": "cross-env NODE_ENV=development nodemon server.js",
+    "build": "npm run build:client && npm run build:server",
+    "build:client": "npm run build:client:js && npm run build:client:css",
+    "build:client:js": "echo 'Building client JS'",
+    "build:client:css": "echo 'Building client CSS'",
+    "build:server": "echo 'Building server JS'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kabakmichal/final-project-gr2-backend.git"
+  },
+  "author": "Vitaliy Zhyryk",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kabakmichal/final-project-gr2-backend/issues"
+  },
+  "homepage": "https://github.com/kabakmichal/final-project-gr2-backend#readme",
   "dependencies": {
+    "@sendgrid/mail": "^7.7.0",
+    "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
     "express": "^4.18.2",
-    "mongoose": "^6.9.1"
+    "joi": "^17.7.1",
+    "jsonwebtoken": "^9.0.0",
+    "mongoose": "^6.9.1",
+    "morgan": "^1.10.0",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^4.6.2",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "nodemon": "^2.0.20"
   }
 }
