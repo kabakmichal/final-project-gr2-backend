@@ -41,7 +41,7 @@ class TodosController {
       const requestBody = req.body;
       const userId = req.user.id;
       const todo = await todosModel.create(requestBody);
-      await usersModel.findOneAndUpdate(
+      await usersModel.findByIdAndUpdate(
         userId,
         {
           $push: { todoListIds: todo._id },
