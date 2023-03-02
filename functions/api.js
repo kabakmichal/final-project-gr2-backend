@@ -4,12 +4,14 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 dotenv.config();
 const mongoose = require("mongoose");
+const serverless = require("serverless-http");
 
-const todoRouter = require("./todos/todos.router.js");
-const usersRouter = require("./users/users.router.js");
+const todoRouter = require("../src/todos/todos.router.js");
+const usersRouter = require("../src/users/users.router.js");
 
 const swaggerUi = require("swagger-ui-express");
 const swaggerJSDoc = require("swagger-jsdoc");
+const rootRouter = express.Router();
 
 const swaggerOptions = {
   definition: {
@@ -26,8 +28,12 @@ const swaggerOptions = {
   },
   apis: ["./src/*.js"],
 };
-
 const swaggerDocs = swaggerJSDoc(swaggerOptions);
+
+rootRouter.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+
+rootRouter.use("/todos", todoRouter);
+rootRouter.use("/users", usersRouter);
 
 async function main() {
   try {
@@ -41,7 +47,6 @@ async function main() {
 main();
 
 const app = express();
-app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 const formatsLogger = app.get("env") === "development" ? "dev" : "short";
 app.use(express.static("public"));
@@ -49,8 +54,7 @@ app.use(logger(formatsLogger));
 app.use(cors());
 app.use(express.json());
 
-app.use("/api/todos", todoRouter);
-app.use("/api/users", usersRouter);
+app.use("/.netlify/functions/api", rootRouter);
 
 app.use((req, res) => {
   res.status(404).json({ message: "Not found" });
@@ -517,4 +521,4 @@ app.use((err, req, res, next) => {
  *           $ref: '#/components/schemas/TodoElement'
  */
 
-module.exports = app;
+module.exports.handler = serverless(app);

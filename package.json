@@ -5,11 +5,8 @@
   "main": "server.js",
   "scripts": {
     "start:dev": "cross-env NODE_ENV=development nodemon server.js",
-    "build": "npm run build:client && npm run build:server",
-    "build:client": "npm run build:client:js && npm run build:client:css",
-    "build:client:js": "echo 'Building client JS'",
-    "build:client:css": "echo 'Building client CSS'",
-    "build:server": "echo 'Building server JS'"
+    "start": "./node_modules/.bin/netlify-lambda serve src",
+    "build": "./node_modules/.bin/netlify-lambda build src"
   },
   "repository": {
     "type": "git",
@@ -31,6 +28,8 @@
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^6.9.1",
     "morgan": "^1.10.0",
+    "netlify-cli": "^13.0.0",
+    "serverless-http": "^3.1.1",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^4.6.2",
     "uuid": "^9.0.0"
