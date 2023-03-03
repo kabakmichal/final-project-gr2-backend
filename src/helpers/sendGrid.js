@@ -14,7 +14,7 @@ async function sendVerificationMail(
     username,
     dynamic_template_data: {
       username,
-      verificationUrl: `http://localhost:3000/api/users/verify/${verificationToken}`,
+      verificationUrl: `https://polite-churros-7ddf81.netlify.app/.netlify/functions/api/users/verify/${verificationToken}`,
     },
   };
 
