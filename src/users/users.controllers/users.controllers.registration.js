@@ -92,11 +92,64 @@ class UserControllerRegistration {
 
       await usersModel.verifyUser(userToVerify._id);
 
-      const filePath =
-        path.join(__dirname).slice(0, path.join(__dirname).length - 28) +
-        "/file.collector/index.html";
+      const filePath = path.resolve(__dirname, ".", "file.collector");
 
-      return res.status(200).sendFile(filePath);
+      const htmlPage = `<html lang="en">
+        <head>
+          <meta charset="UTF-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+          <title>Email Verification</title>
+          <style>
+            .container {
+              background-color: #ffffff;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              flex-direction: column;
+              height: 100%;
+              font-family: "HelveticaNeueCyr";
+            }
+            .title {
+              color: #00d7ff;
+              font-size: 30px;
+              padding: 30px;
+              border: 1px solid #00d7ff;
+              border-radius: 5px;
+            }
+            .button {
+              color: #ffffff;
+              background-color: #00d7ff;
+              padding: 20px;
+              border: none;
+              border-radius: 10px;
+              margin-top: 20px;
+              text-decoration: none;
+            }
+            .button:hover {
+              transform: scale(1.1);
+            }
+            .link {
+              text-decoration: none;
+              color: #ffffff;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <p class="title">Thank you for email verification</p>
+            <button class="button" type="button">
+              <a href="https://questify-gr2.netlify.app/" class="link"
+                >Click here for to visit our site</a
+              >
+            </button>
+          </div>
+        </body>
+      </html>`;
+
+      console.log(htmlPage);
+
+      return res.status(200).send(htmlPage);
     } catch (error) {
       next(error);
     }
