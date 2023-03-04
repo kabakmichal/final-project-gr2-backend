@@ -33,6 +33,7 @@ const TodoSchema = new Schema({
     required: true,
   },
   category: {
+    enum: ["stuff", "health", "work", "learning", "leisure", "family"],
     required: true,
     type: String,
   },
